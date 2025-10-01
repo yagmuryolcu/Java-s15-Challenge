@@ -1,6 +1,7 @@
 package com.workintech.book;
 import com.workintech.person.Author;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.Objects;
 
 public class Book {
@@ -16,13 +17,13 @@ public class Book {
 
     public Book (long bookID,Author author,String name,double price,boolean status,String edition,LocalDateTime date_of_purchase,String owner){
         this.bookID=bookID;
-        this.author=author;
-        this.name=name;
+        this.author= Objects.requireNonNull(author);
+        this.name=Objects.requireNonNull(name);
         this.price=price;
         this.status=status;
-        this.edition=edition;
-        this.date_of_purchase=date_of_purchase;
-        this.owner=owner;
+        this.edition=Objects.requireNonNull(edition);
+        this.date_of_purchase=Objects.requireNonNull(LocalDateTime.now());
+        this.owner=Objects.requireNonNull(owner);
     }
 
     public long getBookID(){

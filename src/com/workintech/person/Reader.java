@@ -1,5 +1,81 @@
 package com.workintech.person;
 
-public class Reader {
+import com.workintech.book.Book;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+
+public class Reader  extends Person{
+
+    List<Book> borrowedBooks;
+
+    public Reader(String name) {
+        super(name);
+        this.borrowedBooks=new ArrayList<>();
+    }
+
+    public List<Book> getBorrowedBooks(){
+        return Collections.unmodifiableList(this.borrowedBooks);
+    }
+
+    public void purchaseBook(Book book){
+        this.borrowedBooks.add(book);
+        System.out.println(getName()+ "purchase" + book.getAuthor()+"'s best seller book : " + book.getName() + "for $" + book.getPrice());
+    }
+    public void borrowBooks(Book book) {
+        if( book.getStatus()){
+            borrowedBooks.add(book);
+            book.updateStatus(false);
+            //eğer kitap boştaysa ödünç alabilirsin, kitabı listeye ekleyip kitabın durumunu güncelledğm.
+            System.out.println(getName()+ "barrowed the book : " + book.getTitle());
+        }else {
+            System.out.println( book.getName()+ " is not available , cannot be borrowed.");
+        }
+    }
+    public void returnBooks(Book book){
+        if(borrowedBooks.remove(book)){
+            book.updateStatus(true);
+            System.out.println(getName() + "returned the book : " + book.getName());
+        }else {
+            System.out.println(getName() + "does not have this book.");
+        }
+    }
+    public void showBooks(){
+        if (borrowedBooks.isEmpty()) {
+            System.out.println(getName() + " has no borrowed books.");
+        } else {
+            System.out.println(getName() + " has the fallowing books : ");
+            for (Book book : borrowedBooks) {
+                System.out.println("- " + book.getName() + " by " + book.getAuthor());
+            }
+        }
+    }
+
+    @Override
+    public void whoyouare() {
+        System.out.println("I am " + getName() + ", a Reader." + "My favorite book is : " + borrowedBooks.get(2).getName());
+
+    }
+    @Override
+    public boolean equals(Object o){
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Reader reader = (Reader) o;
+        return Objects.equals(getName(), reader.getName());
+        //üye id si koy!!!
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getName());
+    }
+
+    @Override
+    public String toString() {
+        return "Reader{" +
+                "borrowedBooks=" + borrowedBooks +
+                '}';
+    }
 }

@@ -4,6 +4,7 @@ import com.workintech.book.Book;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Author extends Person{
     private List<Book> books;
@@ -33,6 +34,17 @@ public class Author extends Person{
         } else {
             System.out.println("I am " + getName() + ", an Author. I haven't written any books yet.");
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Author author = (Author) o;
+        return Objects.equals(getName(), author.getName());     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getName());
     }
 
     @Override
