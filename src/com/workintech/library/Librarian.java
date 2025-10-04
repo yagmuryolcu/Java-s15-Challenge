@@ -4,33 +4,34 @@ import com.workintech.book.Book;
 import com.workintech.person.Reader;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-public class Librarian  implements Billable{
+public class Librarian  implements Billable {
     private String name;
     private String password;
 
-    public Librarian (String name, String password){
-        this.name=name;
-        this.password=password;
+    public Librarian(String name, String password) {
+        this.name = name;
+        this.password = password;
     }
 
-    public String getName(){
+    public String getName() {
         return name;
     }
-    public String getPassword(){
+
+    public String getPassword() {
         return password;
     }
-
-    public Book searchBook(String bookName, List<Book> books){
-    for (Book book : books) {
-        if(book.getName().equalsIgnoreCase(bookName)){
-            return book;
+    public Book searchBook(Library library, String bookName) {
+        for (Book book : library.getBooksInLibrary().values()) {
+            if (book.getName().equalsIgnoreCase(bookName)) {
+                return book;
+            }
         }
+        return null;
     }
-    return  null;
-    }
-
 
     public boolean verifyMember(Reader reader) {
         if (reader == null) {
@@ -42,22 +43,43 @@ public class Librarian  implements Billable{
     }
 
 
-    public void issueBook (Library library , long bookId , Reader reader){
+    public void issueBook(Library library, long bookId, Reader reader) {
 
         if (!verifyMember(reader)) {
             return;//üye değilse metoddan çıkack
         }
+        Book book = library.getBookById(bookId);
+        if (book == null) {
+            System.out.println("Failed to issue the book.");
+            return;
+        }
 
-        if (library.lendBooks(bookId,reader)){
+        if (library.lendBooks(bookId, reader)) {
+            double amount = book.getPrice();
+            createBill(reader, amount);
             System.out.println("Book issued successfully to " + reader.getName());
-        }else{
+        } else {
             System.out.println("Failed to issue the book.");
         }
     }
 
-    public void returnBook ( Library library, long bookId, Reader reader){
-        if ( library.takeBackBook(bookId,reader)){
+    public void returnBook(Library library, long bookId, Reader reader) {
+        Book book = library.getBookById(bookId);
+        if (book == null) {
+            System.out.println("Failed to find the book.");
+            return;
+        }
+
+        if (library.takeBackBook(bookId, reader)) {
             System.out.println("Book returned successfully by " + reader.getName());
+            double refund = book.getPrice();
+            System.out.println("Refund amount: " + refund + " TL");
+
+            double fine = calculateFine(reader);
+            if (fine > 0) {
+                System.out.println("Late fine due: " + fine + " TL");
+                createBill(reader,fine);
+            }
         } else {
             System.out.println("Failed to return the book.");
         }
@@ -74,7 +96,6 @@ public class Librarian  implements Billable{
         System.out.println("Librarian: " + this.name);
         System.out.println("Reader: " + reader.getName());
         System.out.println("Borrowed Books: " + reader.getBorrowedBooks().size());
-        System.out.println("Late Days : " + calculateFine(reader));
         System.out.println("Fine Amount: " + amount + " TL");
         System.out.println("Date: " + LocalDate.now());
         System.out.println("==================================\n");
@@ -83,23 +104,39 @@ public class Librarian  implements Billable{
 
     @Override
     public double calculateFine(Reader reader) {
-        int lateDays = reader.getBorrowedBooks().size() * 3;
-
-        if ( lateDays <=0){
-            return 0.0;
-        }
-
+        double totalFine = 0.0;
+        int allowedDays = 14;
         double finePerDay = 8.5;
-        double totalFine = lateDays * finePerDay;
 
-        System.out.println("Fine calculated for " + reader.getName() + ": " + totalFine + " TL");
+        for (Book book : reader.getBorrowedBooks()) {
+            LocalDate borrowDate = reader.getBorrowDate(book);
+
+            if (borrowDate != null) {
+                long daysBorrowed = ChronoUnit.DAYS.between(borrowDate, LocalDate.now());
+                long lateDays = daysBorrowed - allowedDays;
+
+                if (lateDays > 0) {
+                    totalFine += lateDays * finePerDay;
+                }
+            }
+        }
         return totalFine;
     }
 
         //lambda deniyorum
     public void searchBooksByName(Library library, String name){
+        if (library == null || name == null) {
+            System.out.println("Invalid input for search.");
+            return;
+        }
+        List<Book> foundBooks = library.getBooksByName(name);
+
+        if (foundBooks.isEmpty()) {
+            System.out.println(" No books found with name: " + name);
+            return;
+        }
        // library.getBooksByName(name).forEach(book -> book.display());    //lambda
-        for (Book book : library.getBooksByName(name)) {
+        for (Book book : foundBooks) {
             book.display();
         }
     }

@@ -55,4 +55,47 @@ public class MemberRecord {
     public String getPhoneNo() {
         return phoneNo;
     }
+
+    public void  getMember(){
+        System.out.println("Member ID: " + memberId);
+        System.out.println("Name: " + name);
+        System.out.println("Type: " + type);
+    }
+
+    public void increaseBookIssued(){
+
+        if  (this.noBooksIssued < this.maxBookLimit) {
+            this.noBooksIssued++;
+            int remaining = maxBookLimit - noBooksIssued;
+            System.out.println("Book issued successfully. Total issued: " + this.noBooksIssued);
+            System.out.println("Remaining book limit: " + remaining);
+
+        } else {
+            System.out.println("Cannot issue more books. Limit reached.");
+        }
+    }
+
+    public void decreaseBookIssued(){
+        if (this.noBooksIssued > 0) {
+            this.noBooksIssued--;
+            int remaining = maxBookLimit - noBooksIssued;
+            System.out.println("Book returned. Total issued: " + noBooksIssued);
+            System.out.println("Remaining book limit: " + remaining);
+        }
+    }
+
+    public void payBill(double fineAmount) {
+        if (fineAmount > 0) {
+            System.out.println("\n========== MEMBER BILL ==========");
+            System.out.println("Member Name: " + name);
+            System.out.println("Books Borrowed: " + noBooksIssued);
+            System.out.println("Maximum Book Limit: " + maxBookLimit);
+            System.out.println("Total Amount to Pay: " + fineAmount + " TL");
+            System.out.println("Date: " + LocalDateTime.now());
+            System.out.println("================================\n");
+        } else {
+            System.out.println(name + " has no fines.");
+        }
+    }
+
 }
