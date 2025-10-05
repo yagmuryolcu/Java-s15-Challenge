@@ -29,7 +29,7 @@
 
         public void addReader(Reader reader) {
             readers.add(reader);
-            System.out.println("Reader added: " + reader.getName());
+            //System.out.println("Reader added: " + reader.getName());
         }
 
         public Book getBookById(long bookID){
@@ -44,13 +44,9 @@
             List<Book> bookNames = new ArrayList<>();
 
             for (Book book : booksInLibrary.values()) {
-                if (book.getName().toLowerCase().contains(name.toLowerCase())) {
+                if (book.getTitle().toLowerCase().contains(name.toLowerCase())) {
                     bookNames.add(book);
                 }
-            }
-
-            if (bookNames.isEmpty()) {
-                System.out.println("No books found with name: " + name);
             }
 
             return bookNames;
@@ -60,15 +56,17 @@
             List<Book> authorNames = new ArrayList<>();
 
             for (Book book : booksInLibrary.values()){
-                if(book.getAuthor().getName().equalsIgnoreCase(authorName)){
-                    authorNames.add(book);
+                if (book.getAuthor() != null &&
+                        book.getAuthor().getName().equalsIgnoreCase(authorName)) {
+                        authorNames.add(book);
                 }
             }
-            if (authorNames.isEmpty()) {
+            if (authorNames.isEmpty() ) {
                 System.out.println("No books found by author: " + authorName);
             }
             return authorNames;
         }
+
 
         public void newBook(Book book) {
             if(booksInLibrary.containsKey(book.getBookID())){
@@ -76,7 +74,7 @@
             } else {
                 booksInLibrary.put(book.getBookID(), book); //kitap id si key kitabın kendisi value
                 authors.add(book.getAuthor());
-                System.out.println("Book added: " + book.getName());
+                //System.out.println("Book added: " + book.getTitle());
             }
         }
         public void updateBook(long bookId, Book updatedBook) {
@@ -86,13 +84,14 @@
             }
             booksInLibrary.put(bookId, updatedBook);
             authors.add(updatedBook.getAuthor());
-            System.out.println("Book updated: " + updatedBook.getName());
+            System.out.println("Book updated: " + updatedBook.getTitle());
         }
 
         public void removeBook(long bookId) {
             Book removedBook = booksInLibrary.remove(bookId);
             if (removedBook != null) {
-                System.out.println("Book removed: " + removedBook.getName());
+                System.out.println("Book removed: " + removedBook.getTitle());
+                showAllBooks();
             } else {
                 System.out.println("Book with ID " + bookId + " not found!");
             }
@@ -115,8 +114,10 @@
                 return false;
             }
             book.setStatus(false);
+            book.changeOwner(reader);
             reader.borrowBooks(book);
             return true;
+
         }
 
         public boolean takeBackBook(long bookId , Reader reader) {
@@ -131,7 +132,7 @@
             }
             book.updateStatus(true);
             reader.returnBooks(book);
-            System.out.println(reader.getName() + " returned " + book.getName());
+            System.out.println(reader.getName() + " returned " + book.getTitle());
             return true;
         }
         public void showAllBooks() {
@@ -163,7 +164,7 @@
             }
             System.out.println("\n=== All Readers in Library ===");
             for (Reader reader : readers){
-                System.out.println(" - " + reader.getName() + "Barrowed books : " + reader.getBorrowedBooks());
+                System.out.println(" - " + reader.getName() + "Borrowed books : " + reader.getBorrowedBooks());
             }
         }
 
@@ -183,6 +184,36 @@
                 System.out.println("No books found in this category.");
             }
         }
+
+        public void searchBooksByAuthor(Library library , Author author){
+
+            if(library ==null || author == null){
+                System.out.println("Invalid input for search");
+                return;
+            }
+
+            List<Book> authorsAllBooks= new ArrayList<>();
+
+            for (Book book : library.getBooksInLibrary().values()){
+                if(book.getAuthor().equals(author)){
+                    authorsAllBooks.add(book);
+                }
+
+            }
+
+            if (authorsAllBooks.isEmpty()){
+                System.out.println("No books found by " + author.getName() + "in the library !");
+                return;
+            }
+            System.out.println("\n========== Books by " + author.getName() + " ==========");
+            System.out.println("Total books found : " + authorsAllBooks.size());
+            System.out.println("===================================================/n");
+
+            authorsAllBooks.forEach(Book::display);//lambda
+        }
+
+
+
         }
 
 

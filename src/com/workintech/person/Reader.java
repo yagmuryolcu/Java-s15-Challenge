@@ -30,18 +30,18 @@ public class Reader  extends Person{
 
     public void purchaseBook(Book book){
         this.borrowedBooks.add(book);
-        System.out.println(getName()+ " purchase " + book.getAuthor()+" 's best seller book : " + book.getName() + " for " + book.getPrice()+ " TL");
+        System.out.println(getName()+ " purchase " + book.getAuthor()+" 's best seller book : " + book.getTitle() + " for " + book.getPrice()+ " TL");
     }
     public void borrowBooks(Book book) {
         borrowedBooks.add(book);
         borrowDates.put(book, LocalDate.now());
-        System.out.println(getName() + " borrowed the book: " + book.getName());
+        //System.out.println(getName() + " borrowed the book: " + book.getTitle());
     }
     public void returnBooks(Book book){
         if(borrowedBooks.remove(book)){
             book.updateStatus(true);
             borrowDates.remove(book);
-            System.out.println(getName() + "returned the book : " + book.getName());
+           // System.out.println(getName() + "returned the book : " + book.getTitle());
         }else {
             System.out.println(getName() + "does not have this book.");
         }
@@ -52,7 +52,7 @@ public class Reader  extends Person{
         } else {
             System.out.println(getName() + " has the fallowing books : ");
             for (Book book : borrowedBooks) {
-                System.out.println("- " + book.getName() + " by " + book.getAuthor());
+                System.out.println("- " + book.getTitle() + " by " + book.getAuthor());
             }
         }
     }
@@ -63,7 +63,7 @@ public class Reader  extends Person{
             System.out.println("I am " + getName() + ", a Reader with no books yet.");
         } else {
             System.out.println("I am " + getName() + ", a Reader. My favorite book is: " +
-                    borrowedBooks.get(0).getName());
+                    borrowedBooks.get(0).getTitle());
         }
     }
     @Override

@@ -1,5 +1,7 @@
 package com.workintech.book;
 import com.workintech.person.Author;
+import com.workintech.person.Reader;
+
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Objects;
@@ -13,17 +15,17 @@ public class Book {
     private boolean status;
     private String edition;
     private LocalDateTime date_of_purchase;
-    private String owner;
+    private Reader owner;
 
-    public Book (long bookID,Author author,String name,double price,boolean status,String edition,LocalDateTime date_of_purchase,String owner){
+    public Book (long bookID,Author author,String name,double price,boolean status,String edition,LocalDateTime date_of_purchase){
         this.bookID=bookID;
         this.author= Objects.requireNonNull(author);
         this.name=Objects.requireNonNull(name);
         this.price=price;
         this.status=status;
         this.edition=Objects.requireNonNull(edition);
-        this.date_of_purchase=Objects.requireNonNull(LocalDateTime.now());
-        this.owner=Objects.requireNonNull(owner);
+        this.date_of_purchase = Objects.requireNonNull(date_of_purchase);
+        this.owner=null;
     }
 
     public long getBookID(){
@@ -31,9 +33,6 @@ public class Book {
     }
     public Author getAuthor(){
         return author;
-    }
-    public String getName() {
-        return name;
     }
     public double getPrice(){
         return price;
@@ -48,15 +47,36 @@ public class Book {
         return  date_of_purchase;
     }
     public String getTitle(){
-        return name;
+        return name ;
     }
-    public String getOwner(){
+    public Reader getOwner(){
         return owner;
     }
-    public void changeOwner(String newOwner) {
-        this.owner = newOwner;
-        System.out.println("Book owner has been changed: : " + newOwner);
+
+
+    public void changeOwner(Reader newOwner) {
+        if (this.owner == null) {
+            this.owner = newOwner;
+            this.status = false;
+            System.out.println("Book owner has been changed: : " + newOwner.getName());
+
+        }else if (this.owner.equals(newOwner)) {
+            System.out.println("Book is already borrowed by : " + newOwner.getName());
+
+        }else {
+            System.out.println("The Book /'" + name + "'/ is currently borrowed by " + owner.getName()+ "."+ newOwner.getName()+ "cannot borrow !");
+        }
     }
+    public void removeOwner() {
+        if (this.owner != null) {
+            System.out.println("✅ " + owner.getName() + " has returned the book \"" + name + "\".");
+            this.owner = null;
+            this.status = true;
+        } else {
+            System.out.println("ℹ️ The book \"" + name + "\" is already in the library.");
+        }
+    }
+
     public void updateStatus(boolean newStatus) {
         this.status = newStatus;
         System.out.println("Book status has been updated: " + newStatus);
@@ -87,12 +107,13 @@ public class Book {
     public void display() {
         System.out.println("Book ID: " + bookID);
         System.out.println("Title: " + name);
-        System.out.println("Author: " + author);
-        System.out.println("Price: $" + price);
+        System.out.println("Author: " + author.getName());
+        System.out.println("Price: " + price + "TL");
         System.out.println("Edition: " + edition);
         System.out.println("Purchased on: " + date_of_purchase);
         System.out.println("Status: " + (status ? "Available" : "Not Available"));
-        System.out.println("Owner: " + (owner != null ? owner : "No Owner"));
+        System.out.println("Owner: " + (owner != null ? owner.getName() : "No Owner"));
+        System.out.println("Type: " + this.getClass().getSimpleName());
         System.out.println("----------------------------------------");
     }
     @Override
@@ -115,10 +136,11 @@ public class Book {
                 ", Author='" + author.getName() + '\'' +
                 ", Name='" + name + '\'' +
                 ", Price=" + price +
-                ", Status=" + status +
+                ", Status=" + (status ? "Available" : "Not Available") +
                 ", Edition='" + edition + '\'' +
-                ", Date Of Purchase=" + date_of_purchase +
-                ", Owner='" + owner + '\'' +
+                ", DateOfPurchase=" + date_of_purchase +
+                ", Owner='" + (owner != null ? owner.getName() : "No Owner") + '\'' +
+                ", Type='" + this.getClass().getSimpleName() + '\'' +
                 '}';
     }
 }

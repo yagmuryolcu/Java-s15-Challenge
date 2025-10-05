@@ -17,12 +17,19 @@ public class Author extends Person{
 
     public void newBook (Book book){
         books.add(book);
-        System.out.println(getName() + "wrote a new book : " + book.getName());
+       // System.out.println(getName() + "wrote a new book : " + book.getTitle());
     }
     public void showBooks() {
+
+        if (books.isEmpty()) {
+            System.out.println(getName() + " has not written any books yet.");
+            return;
+        }
+        System.out.println("\n========== Books by " + getName() + " ==========");
+        System.out.println("Total books: " + books.size());
         System.out.println(getName() + " has written the following books:");
         for (Book book : books) {
-            System.out.println("- " + book.getName());
+            System.out.println("- " + book.getTitle());
         }
     }
 
@@ -30,7 +37,7 @@ public class Author extends Person{
     @Override
     public void whoyouare() {
         if (!books.isEmpty()) {
-            System.out.println("I am " + getName() + ", an Author. My favorite book is " + books.get(0).getName());
+            System.out.println("I am " + getName() + ", an Author. My favorite book is " + books.get(0).getTitle());
         } else {
             System.out.println("I am " + getName() + ", an Author. I haven't written any books yet.");
         }
@@ -46,11 +53,11 @@ public class Author extends Person{
     public int hashCode() {
         return Objects.hashCode(getName());
     }
-
     @Override
     public String toString() {
         return "Author{" +
-                "books=" + books +
+                "Name='" + getName() + '\'' +
+                ", Books Count=" + books.size() +
                 '}';
     }
 }
