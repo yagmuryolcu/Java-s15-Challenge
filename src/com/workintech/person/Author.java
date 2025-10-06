@@ -3,6 +3,7 @@ package com.workintech.person;
 import com.workintech.book.Book;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -14,10 +15,14 @@ public class Author extends Person{
         super(name);
         this.books=new ArrayList<>();
     }
-
+    public List<Book> getBooks() {
+        return Collections.unmodifiableList(books);
+    }
     public void newBook (Book book){
-        books.add(book);
-       // System.out.println(getName() + "wrote a new book : " + book.getTitle());
+        if (book != null && !books.contains(book)) {
+            books.add(book);
+           // System.out.println(getName() + " added new book: " + book.getTitle());
+        }
     }
     public void showBooks() {
 
@@ -29,8 +34,9 @@ public class Author extends Person{
         System.out.println("Total books: " + books.size());
         System.out.println(getName() + " has written the following books:");
         for (Book book : books) {
-            System.out.println("- " + book.getTitle());
+            System.out.println("- " + book.getTitle() + " (" + book.getEdition() + ") - " + book.getPrice() + " TL");
         }
+        System.out.println();
     }
 
 
@@ -45,6 +51,7 @@ public class Author extends Person{
 
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Author author = (Author) o;
         return Objects.equals(getName(), author.getName());     }

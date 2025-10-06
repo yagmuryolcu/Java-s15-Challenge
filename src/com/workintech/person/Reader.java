@@ -9,9 +9,12 @@ public class Reader  extends Person{
 
     private List<Book> borrowedBooks;
     private Map<Book, LocalDate> borrowDates;
+    private MemberRecord memberRecord;
 
-    public Reader(String name) {
+
+    public Reader(String name , MemberRecord memberRecord) {
         super(name);
+        this.memberRecord=memberRecord;
         this.borrowedBooks=new ArrayList<>();
         this.borrowDates= new HashMap<>();
     }
@@ -23,6 +26,9 @@ public class Reader  extends Person{
         return Collections.unmodifiableList(this.borrowedBooks);
     }
 
+    public MemberRecord getMemberRecord() {
+        return memberRecord;
+    }
     public Map<Book, LocalDate> getBorrowDates() {
         return Collections.unmodifiableMap(this.borrowDates);
     }
@@ -59,25 +65,23 @@ public class Reader  extends Person{
 
     @Override
     public void whoyouare() {
-        if (borrowedBooks.isEmpty()) {
-            System.out.println("I am " + getName() + ", a Reader with no books yet.");
-        } else {
-            System.out.println("I am " + getName() + ", a Reader. My favorite book is: " +
-                    borrowedBooks.get(0).getTitle());
-        }
+        System.out.println("\n=== READER INFORMATION ===");
+        System.out.println("Name: " + getName());
+        memberRecord.getMember();
+        System.out.println("Currently borrowed books: " + borrowedBooks.size());
+        System.out.println("=========================");
     }
     @Override
     public boolean equals(Object o){
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Reader reader = (Reader) o;
-        return Objects.equals(getName(), reader.getName());
-        //üye id si koy!!!
+        return this.memberRecord.getMemberId() == reader.memberRecord.getMemberId();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getName());
+        return Objects.hash(memberRecord.getMemberId());
     }
 
     @Override

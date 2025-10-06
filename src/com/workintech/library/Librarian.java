@@ -13,6 +13,8 @@ import java.util.List;
 public class Librarian  implements Billable {
     private String name;
     private String password;
+    private static final int ALLOWED_BORROW_DAYS = 14;
+    private static final double FINE_PER_DAY = 8.5;
 
     public Librarian(String name, String password) {
         this.name = name;
@@ -67,10 +69,8 @@ public class Librarian  implements Billable {
         }
 
         if (library.lendBooks(bookId, reader)) {
-            //double amount = book.getPrice();
-          //lendbookta yaptım  book.changeOwner(reader);
-            //reader.borrowBooks(book);
-            createBill(reader, 0);
+            double amount = book.getPrice();
+            createBill(reader, amount);
             System.out.println("Book issued successfully to " + reader.getName());
         } else {
             System.out.println("Failed to issue the book.");
@@ -92,7 +92,10 @@ public class Librarian  implements Billable {
 
             double fine = calculateFine(reader);
             if (fine > 0) {
+                double netRefund = refund - fine;
                 System.out.println("Late fine due: " + fine + " TL");
+                System.out.println("Net refund: " + netRefund + " TL");
+
                 createBill(reader,fine);
             }
         } else {
@@ -119,6 +122,11 @@ public class Librarian  implements Billable {
 
     @Override
     public double calculateFine(Reader reader) {
+        if (reader == null) {
+            return 0.0;
+        }
+
+
         double totalFine = 0.0;
         int allowedDays = 14;
         double finePerDay = 8.5;
@@ -128,10 +136,10 @@ public class Librarian  implements Billable {
 
             if (borrowDate != null) {
                 long daysBorrowed = ChronoUnit.DAYS.between(borrowDate, LocalDate.now());
-                long lateDays = daysBorrowed - allowedDays;
+                long lateDays = daysBorrowed - ALLOWED_BORROW_DAYS;
 
                 if (lateDays > 0) {
-                    totalFine += lateDays * finePerDay;
+                    totalFine += lateDays * FINE_PER_DAY;
                 }
             }
         }
@@ -140,7 +148,7 @@ public class Librarian  implements Billable {
 
         //lambda deniyorum
     public void searchBooksByName(Library library, String name){
-        if (library == null || name == null) {
+        if (library == null || name == null  || name.trim().isEmpty()) {
             System.out.println("Invalid input for search.");
             return;
         }

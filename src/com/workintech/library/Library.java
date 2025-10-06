@@ -10,10 +10,11 @@
         private Map< Long , Book> booksInLibrary; //id ye göre kitabı bulacak, benzersiz data tutacak,hızlı
         private Set<Author> authors; //tekrar eden veri yok
         private List<Reader> readers; // index var, tekrar edebilir.
+        public static final int MAX_BOOKS_PER_READER = 5;
 
 
         public Library(Map<Long, Book> booksInLibrary, Set<Author> authors, List<Reader> readers) {
-            this.booksInLibrary = Objects.requireNonNull(booksInLibrary);
+            this.booksInLibrary =  new TreeMap<>();
             this.authors = Objects.requireNonNull(authors);
             this.readers = Objects.requireNonNull(readers);
         }
@@ -28,8 +29,19 @@
         }
 
         public void addReader(Reader reader) {
-            readers.add(reader);
-            //System.out.println("Reader added: " + reader.getName());
+            if (reader != null && !readers.contains(reader)) {
+                readers.add(reader);
+            }
+        }
+        //STREAM API
+        public Reader findReaderByName(String name) {
+            if (name == null || name.trim().isEmpty()) {
+                return null;
+            }
+            return readers.stream()
+                    .filter(r -> r.getName().equalsIgnoreCase(name.trim()))
+                    .findFirst()
+                    .orElse(null);
         }
 
         public Book getBookById(long bookID){
@@ -69,12 +81,19 @@
 
 
         public void newBook(Book book) {
+
+            if (book == null) {
+                System.out.println("Book cannot be null.");
+                return;
+            }
+
+
             if(booksInLibrary.containsKey(book.getBookID())){
                 System.out.println("Book with ID " + book.getBookID() + "already exist.");
             } else {
                 booksInLibrary.put(book.getBookID(), book); //kitap id si key kitabın kendisi value
                 authors.add(book.getAuthor());
-                //System.out.println("Book added: " + book.getTitle());
+                System.out.println("Book added: " + book.getTitle());
             }
         }
         public void updateBook(long bookId, Book updatedBook) {
@@ -98,6 +117,11 @@
         }
 
         public boolean lendBooks (long BookId , Reader reader){
+
+            if (reader == null) {
+                System.out.println("Reader cannot be null.");
+                return false;
+            }
             Book book = booksInLibrary.get(BookId);
 
             if ( book == null) {
@@ -109,8 +133,9 @@
                 System.out.println("Book is already barrowed.");
                 return false;
             }
-            if (reader.getBorrowedBooks().size() >= 5) {
-                System.out.println(reader.getName() + " has already borrowed 5 books. Cannot borrow more.");
+
+            if (reader.getBorrowedBooks().size() >= MAX_BOOKS_PER_READER) {
+                System.out.println(reader.getName() + " has already borrowed " + MAX_BOOKS_PER_READER + " books. Cannot borrow more.");
                 return false;
             }
             book.setStatus(false);
@@ -121,6 +146,12 @@
         }
 
         public boolean takeBackBook(long bookId , Reader reader) {
+
+            if (reader == null) {
+                System.out.println("Reader cannot be null.");
+                return false;
+            }
+
             Book book = booksInLibrary.get(bookId);
             if (book == null){
                 System.out.println("Book could  not found.");
@@ -135,6 +166,7 @@
             System.out.println(reader.getName() + " returned " + book.getTitle());
             return true;
         }
+        //Listeleme metodları
         public void showAllBooks() {
             if (booksInLibrary.isEmpty()) {
                 System.out.println("No books in the library.");
@@ -164,7 +196,10 @@
             }
             System.out.println("\n=== All Readers in Library ===");
             for (Reader reader : readers){
-                System.out.println(" - " + reader.getName() + "Borrowed books : " + reader.getBorrowedBooks());
+                System.out.println("\n- Name: " + reader.getName());
+                System.out.println("  Member ID: " + reader.getMemberRecord().getMemberId());
+                System.out.println("  Type: " + reader.getMemberRecord().getType());
+                System.out.println("  Borrowed books: " + reader.getBorrowedBooks().size() + "/" + reader.getMemberRecord().getMaxBookLimit());
             }
         }
 

@@ -69,11 +69,11 @@ public class Book {
     }
     public void removeOwner() {
         if (this.owner != null) {
-            System.out.println("✅ " + owner.getName() + " has returned the book \"" + name + "\".");
+            System.out.println(owner.getName() + " has returned the book \"" + name + "\".");
             this.owner = null;
             this.status = true;
         } else {
-            System.out.println("ℹ️ The book \"" + name + "\" is already in the library.");
+            System.out.println(" The book \"" + name + "\" is already in the library.");
         }
     }
 
@@ -105,6 +105,7 @@ public class Book {
 
 
     public void display() {
+        System.out.println("----------------------------------------");
         System.out.println("Book ID: " + bookID);
         System.out.println("Title: " + name);
         System.out.println("Author: " + author.getName());
@@ -114,7 +115,6 @@ public class Book {
         System.out.println("Status: " + (status ? "Available" : "Not Available"));
         System.out.println("Owner: " + (owner != null ? owner.getName() : "No Owner"));
         System.out.println("Type: " + this.getClass().getSimpleName());
-        System.out.println("----------------------------------------");
     }
     @Override
     public boolean equals(Object o) {
