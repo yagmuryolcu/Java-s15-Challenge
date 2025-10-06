@@ -1,6 +1,7 @@
 package com.workintech.person;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class MemberRecord {
     private long memberId;
@@ -62,17 +63,19 @@ public class MemberRecord {
         System.out.println("Type: " + type);
     }
 
-    public void increaseBookIssued(){
+    public boolean increaseBookIssued(){
 
         if  (this.noBooksIssued < this.maxBookLimit) {
             this.noBooksIssued++;
             int remaining = maxBookLimit - noBooksIssued;
             System.out.println("Book issued successfully. Total issued: " + this.noBooksIssued);
             System.out.println("Remaining book limit: " + remaining);
+            return true;
 
         } else {
             System.out.println("Cannot issue more books. Limit reached.");
         }
+        return false;
     }
 
     public void decreaseBookIssued(){
@@ -96,6 +99,30 @@ public class MemberRecord {
         } else {
             System.out.println(name + " has no fines.");
         }
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MemberRecord that = (MemberRecord) o;
+        return memberId == that.memberId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(memberId);
+    }
+    @Override
+    public String toString() {
+        return "MemberRecord{" +
+                "ID=" + memberId +
+                ", Name='" + name + '\'' +
+                ", Type='" + type + '\'' +
+                ", Books Issued=" + noBooksIssued + "/" + maxBookLimit +
+                ", Membership Date=" + dateOfMembership.toLocalDate() +
+                ", Phone='" + phoneNo + '\'' +
+                ", Address='" + address + '\'' +
+                '}';
     }
 
 }

@@ -86,7 +86,7 @@ public class Librarian  implements Billable {
 
         if (library.takeBackBook(bookId, reader)) {
             book.removeOwner();
-            System.out.println("Book returned successfully by " + reader.getName());
+            //System.out.println("Book returned successfully by " + reader.getName());
             double refund = book.getPrice();
             System.out.println("Refund amount: " + refund + " TL");
 

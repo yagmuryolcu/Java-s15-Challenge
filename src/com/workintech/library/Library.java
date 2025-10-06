@@ -93,7 +93,7 @@
             } else {
                 booksInLibrary.put(book.getBookID(), book); //kitap id si key kitabın kendisi value
                 authors.add(book.getAuthor());
-                System.out.println("Book added: " + book.getTitle());
+                //System.out.println("Book added: " + book.getTitle());
             }
         }
         public void updateBook(long bookId, Book updatedBook) {
@@ -134,9 +134,11 @@
                 return false;
             }
 
-            if (reader.getBorrowedBooks().size() >= MAX_BOOKS_PER_READER) {
+            if (!reader.getMemberRecord().increaseBookIssued()) {
                 System.out.println(reader.getName() + " has already borrowed " + MAX_BOOKS_PER_READER + " books. Cannot borrow more.");
+
                 return false;
+
             }
             book.setStatus(false);
             book.changeOwner(reader);
@@ -161,9 +163,8 @@
                 System.out.println(reader.getName() + " did not borrow this book.");
                 return false;
             }
-            book.updateStatus(true);
-            reader.returnBooks(book);
-            System.out.println(reader.getName() + " returned " + book.getTitle());
+           // reader.returnBooks(book);
+            reader.getMemberRecord().decreaseBookIssued();
             return true;
         }
         //Listeleme metodları

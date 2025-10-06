@@ -79,7 +79,7 @@ public class Book {
 
     public void updateStatus(boolean newStatus) {
         this.status = newStatus;
-        System.out.println("Book status has been updated: " + newStatus);
+       // System.out.println("Book status has been updated: " + newStatus);
     }
     public void setBookID(long bookID){
         this.bookID=bookID;
