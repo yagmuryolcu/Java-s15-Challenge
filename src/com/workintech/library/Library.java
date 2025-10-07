@@ -147,7 +147,7 @@
             }
 
             if (!book.getStatus()){
-                System.out.println("Book is already barrowed.");
+                System.out.println("Book is already barrowed by : " + book.getOwner().getName());
                 return false;
             }
 
@@ -264,23 +264,6 @@
 
             authorsAllBooks.forEach(Book::display);//lambda
         }
-
-        @Override
-        public boolean equals(Object obj){
-            if(this == obj)
-                return true;
-
-          if(obj == null || getClass() != obj.getClass())
-                    return false;
-                Library library =(Library) obj;
-                return library.getLibraryId().equals(libraryId);
-
-        }
-        @Override
-        public int hashCode() {
-            return Objects.hash(libraryId);
-        }
-
 
         }
 

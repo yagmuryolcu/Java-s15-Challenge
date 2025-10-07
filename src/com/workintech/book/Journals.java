@@ -36,7 +36,6 @@ public class Journals extends Book{
         super.display();
         System.out.println("Publisher : " + publisher);
         System.out.println("Issue Number : " + issueNumber);
-        System.out.println("-------------------------------------");
 
     }
 

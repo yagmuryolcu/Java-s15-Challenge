@@ -36,7 +36,6 @@ public class StudyBooks extends Book{
         super.display();
         System.out.println("Subject : " + subject);
         System.out.println("Grade Level : " + gradeLevel);
-        System.out.println("-------------------------------------");
     }
 
     @Override

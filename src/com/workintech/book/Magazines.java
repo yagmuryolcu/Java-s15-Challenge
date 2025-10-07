@@ -35,7 +35,6 @@ public class Magazines extends Book{
         super.display();
         System.out.println("Topic : " + topic);
         System.out.println("Page Count : " + pageCount);
-        System.out.println("-------------------------------------");
 
     }
 

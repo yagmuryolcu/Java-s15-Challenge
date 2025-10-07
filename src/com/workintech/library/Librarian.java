@@ -129,8 +129,7 @@ public class Librarian  implements Billable {
 
 
         double totalFine = 0.0;
-        int allowedDays = 14;
-        double finePerDay = 8.5;
+
 
         for (Book book : reader.getBorrowedBooks()) {
             LocalDate borrowDate = reader.getBorrowDate(book);

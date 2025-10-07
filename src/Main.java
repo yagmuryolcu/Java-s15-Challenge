@@ -44,7 +44,6 @@
             Book book6 = new StudyBooks(6L,author2,"History",180.00,true,"Second Edition",LocalDateTime.now(),"History","High School");
             Book book7=new Magazines(7L,author6,"Night Birds",100.00,true,"Second edition",LocalDateTime.now(),"Aegument in celebrities",10);
 
-
             Library library = Library.getInstance(1L, new TreeMap<>(), new HashSet<>(), new ArrayList<>());
             Librarian librarian = new Librarian("Yağmur Admin", "1846920");
 

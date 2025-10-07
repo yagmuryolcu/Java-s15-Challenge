@@ -81,9 +81,6 @@ public class Book {
         this.status = newStatus;
        // System.out.println("Book status has been updated: " + newStatus);
     }
-    public void setBookID(long bookID){
-        this.bookID=bookID;
-    }
     public void setAuthor( Author author){
         this.author=author;
     }
