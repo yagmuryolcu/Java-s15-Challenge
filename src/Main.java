@@ -14,7 +14,6 @@
         public static void main(String[] args) {
 
             Scanner scanner = new Scanner(System.in);
-
             Author author1 = new Author("Yağmur Sude Yolcu");
             Author author2 = new Author("Cahit Sıtkı Tarancı");
             Author author3 = new Author("Cemal Süreyya");
@@ -46,7 +45,7 @@
             Book book7=new Magazines(7L,author6,"Night Birds",100.00,true,"Second edition",LocalDateTime.now(),"Aegument in celebrities",10);
 
 
-            Library library = new Library(new TreeMap<>(), new HashSet<>(), new ArrayList<>());
+            Library library = Library.getInstance(1L, new TreeMap<>(), new HashSet<>(), new ArrayList<>());
             Librarian librarian = new Librarian("Yağmur Admin", "1846920");
 
             library.newBook(book1);

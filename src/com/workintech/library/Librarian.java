@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Librarian  implements Billable {
     private String name;
@@ -162,6 +163,23 @@ public class Librarian  implements Billable {
         for (Book book : foundBooks) {
             book.display();
         }
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+
+        if (obj == null || getClass() != obj.getClass())
+            return false;
+
+        Librarian librarian = (Librarian) obj;
+        return Objects.equals(name, librarian.name) &&
+                Objects.equals(password, librarian.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, password);
     }
 
 }

@@ -7,16 +7,26 @@
     import java.util.*;
 
     public class Library {
+        private static Library instance = null;
         private Map< Long , Book> booksInLibrary; //id ye göre kitabı bulacak, benzersiz data tutacak,hızlı
         private Set<Author> authors; //tekrar eden veri yok
         private List<Reader> readers; // index var, tekrar edebilir.
         public static final int MAX_BOOKS_PER_READER = 5;
+        private Long libraryId;
 
 
-        public Library(Map<Long, Book> booksInLibrary, Set<Author> authors, List<Reader> readers) {
-            this.booksInLibrary =  new TreeMap<>();
-            this.authors = Objects.requireNonNull(authors);
-            this.readers = Objects.requireNonNull(readers);
+        private Library(Long libraryId, Map<Long, Book> booksInLibrary, Set<Author> authors, List<Reader> readers) {
+            this.libraryId = Objects.requireNonNull(libraryId, "Library ID cannot be null");
+            this.booksInLibrary = new TreeMap<>();
+            this.authors = Objects.requireNonNull(authors, "Authors cannot be null");
+            this.readers = Objects.requireNonNull(readers, "Readers cannot be null");
+        }
+
+        public static Library getInstance(Long libraryId, Map<Long, Book> booksInLibrary, Set<Author> authors, List<Reader> readers) {
+            if (instance == null) {
+                instance = new Library(libraryId, booksInLibrary, authors, readers);
+            }
+            return instance;
         }
         public Map<Long,Book> getBooksInLibrary(){
             return Collections.unmodifiableMap(this.booksInLibrary);
@@ -26,6 +36,13 @@
         }
         public List<Reader> getReaders(){
             return Collections.unmodifiableList(this.readers);
+        }
+
+        public Long getLibraryId() {
+            if (libraryId == null) {
+                throw new IllegalArgumentException("libraryId cannot be null");
+            }
+            return libraryId;
         }
 
         public void addReader(Reader reader) {
@@ -248,6 +265,21 @@
             authorsAllBooks.forEach(Book::display);//lambda
         }
 
+        @Override
+        public boolean equals(Object obj){
+            if(this == obj)
+                return true;
+
+          if(obj == null || getClass() != obj.getClass())
+                    return false;
+                Library library =(Library) obj;
+                return library.getLibraryId().equals(libraryId);
+
+        }
+        @Override
+        public int hashCode() {
+            return Objects.hash(libraryId);
+        }
 
 
         }

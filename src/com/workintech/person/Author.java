@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class Author extends Person{
+public class Author extends Person {
     private List<Book> books;
 
 
